@@ -9,11 +9,12 @@ module.exports = async (req, res) => {
         name: "string|empty:false",
         email: "email|empty:false",
         password: "string|min:6|empty:false",
-        role: "enum:admin,user|optional:true",
+        role: {type:'enum', values:['admin','user'], optional:true},
         avatar: "string|optional:true"
     };
 
     const validate = v.validate(req.body, schema);
+
     if (validate.length) {
         return res.status(400).json({
             status: 'error',
