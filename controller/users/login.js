@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const { User } = require('../../models');
 const Validator = require('fastest-validator');
+const jwt = require('jsonwebtoken');
 const v = new Validator();
 
 module.exports = async (req, res) => {
@@ -36,11 +37,14 @@ module.exports = async (req, res) => {
             });
         }
 
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, { expiresIn: '60s' });
+
         return res.status(200).json({
             status: "success",
             data: {
                 id: user.id,
-                email: user.email
+                email: user.email,            
+                token: token
             }
         });
     } catch (error) {
